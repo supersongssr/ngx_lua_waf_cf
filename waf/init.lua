@@ -61,6 +61,8 @@ urlrules=read_rule('url')
 argsrules=read_rule('args')
 uarules=read_rule('user-agent')
 wturlrules=read_rule('whiteurl')
+wtiprules=read_rule('whiteip')
+blockiprules=read_rule('blockip')
 postrules=read_rule('post')
 ckrules=read_rule('cookie')
 html=read_rule('returnhtml')
@@ -78,7 +80,7 @@ function whiteurl()
     if WhiteCheck then
         if wturlrules ~=nil then
             for _,rule in pairs(wturlrules) do
-                if ngxmatch(ngx.var.uri,rule,"isjo") then
+                if ngxmatch(ngx.var.host..ngx.var.uri,rule,"isjo") then
                     return true 
                  end
             end
@@ -184,20 +186,57 @@ end
 function denycc()
     if CCDeny then
         local uri=ngx.var.uri
-        CCcount=tonumber(string.match(CCrate,'(.*)/'))
-        CCseconds=tonumber(string.match(CCrate,'/(.*)'))
-        local token = getClientIp()..uri
+        -- 直接有参数了 所以不用了
+        -- CCcount=tonumber(string.match(CCrate,'(.*)/'))
+        -- CCseconds=tonumber(string.match(CCrate,'/(.*)'))
+        local uritoken = getClientIp()..ngx.var.uri
+        local hosttoken = getClientIp()..ngx.var.host
+        local refertoken = getClientIp()..ngx.var.http_referer
         local limit = ngx.shared.limit
-        local req,_=limit:get(token)
-        if req then
-            if req > CCcount then
+        local urireq,_=limit:get(uritoken)
+        local hostreq,_=limit:get(hosttoken)
+        local referreq,_=limit:get(refertoken)
+        -- 记录 cc的 ip
+        local line = getClientIp()
+        local filename = logpath..'/'..ngx.var.host..".cc.ip"
+        -- uri CC deny
+        if urireq then
+            if urireq > uriCCrate then
                  ngx.exit(444)
                 return true
+            elseif urireq == uriCCrate then
+                write(filename,line)
             else
-                 limit:incr(token,1)
+                 limit:incr(uritoken,1)
             end
         else
-            limit:set(token,1,CCseconds)
+            limit:set(uritoken,1,CCseconds)
+        end
+        -- host CC deny
+        if hostreq then
+            if hostreq > hostCCrate then
+                 ngx.exit(444)
+                return true
+            elseif hostreq == hostCCrate then
+                write(filename,line)
+            else
+                 limit:incr(hosttoken,1)
+            end
+        else
+            limit:set(hosttoken,1,CCseconds)
+        end
+        -- refer CC deny
+        if referreq then
+            if referreq > referCCrate then
+                ngx.exit(444)
+                return true
+            elseif referreq == referCCrate then
+                write(filename,line)
+            else
+                 limit:incr(refertoken,1)
+            end
+        else
+            limit:set(refertoken,1,CCseconds)
         end
     end
     return false
@@ -229,17 +268,32 @@ function whiteip()
             end
         end
     end
+    if wtiprules ~= nil then
+        for _,ip in pairs(wtiprules) do
+            if getClientIp()==ip then
+                return true
+            end
+        end
+    end
         return false
 end
 
 function blockip()
-     if next(ipBlocklist) ~= nil then
-         for _,ip in pairs(ipBlocklist) do
-             if getClientIp()==ip then
-                 ngx.exit(444)
-                 return true
-             end
-         end
-     end
+    if next(ipBlocklist) ~= nil then
+        for _,ip in pairs(ipBlocklist) do
+            if getClientIp()==ip then
+                ngx.exit(444)
+                return true
+            end
+        end
+    end
+    if blockiprules ~= nil then
+        for _,ip in pairs(blockiprules) do
+            if getClientIp()==ip then
+                ngx.exit(444)
+                return true
+            end
+        end
+    end
          return false
 end
