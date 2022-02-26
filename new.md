@@ -7,6 +7,14 @@
 3. 记录下ip，然后写入到一个文件。
 4. 逐个 把 ip上报给 cloudflare。 
 
+# nginx 透过cdn获取用户真实ip
+在nginx配置文件中，
+http段，加上：
+```conf
+set_real_ip_from 0.0.0.0/0;
+real_ip_header X-Forwarded-For;
+```
+
 # 1 升级 whiteurl 从 uri 到 host + uri 
 waf/init.lua
 ```lua
@@ -221,3 +229,4 @@ ddosCf.sh 供给检测脚本功能
 每分钟检测一次 
 * * * * * /root/ddoscf/ddoscf.sh
 
+# 网站攻击脚本，自动提交到 cloudflare
