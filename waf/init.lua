@@ -269,10 +269,8 @@ function whiteip()
         end
     end
     if wtiprules ~= nil then
-        for _,ip in pairs(wtiprules) do
-            if getClientIp()==ip then
-                return true
-            end
+        if ngxmatch(wtiprules,getClientIp(),"m") then
+            return true
         end
     end
         return false
@@ -288,12 +286,10 @@ function blockip()
         end
     end
     if blockiprules ~= nil then
-        for _,ip in pairs(blockiprules) do
-            if getClientIp()==ip then
-                ngx.exit(444)
-                return true
-            end
+        if ngxmatch(blockiprules,getClientIp(),"m") then
+            ngx.exit(444)
+            return true
         end
     end
-         return false
+        return false
 end

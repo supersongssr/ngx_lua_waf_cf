@@ -230,3 +230,49 @@ ddosCf.sh 供给检测脚本功能
 * * * * * /root/ddoscf/ddoscf.sh
 
 # 网站攻击脚本，自动提交到 cloudflare
+
+# 优化 匹配ip的速度 优化ip黑名单为 全文匹配模式  当被拉黑的ip数量特别多的时候，加快匹配速度
+```lua
+function blockip()
+    if next(ipBlocklist) ~= nil then
+        for _,ip in pairs(ipBlocklist) do
+            if getClientIp()==ip then
+                ngx.exit(444)
+                return true
+            end
+        end
+    end
+    if blockiprules ~= nil then
+        if ngxmatch(blockiprules,getClientIp(),"m") then
+            ngx.exit(444)
+            return true
+        end
+    end
+        return false
+end
+```
+
+
+# 优化 白名单 ip 匹配速度， 当ip数量特别多的时候，可以加快速度
+```lua
+function whiteip()
+    if next(ipWhitelist) ~= nil then
+        for _,ip in pairs(ipWhitelist) do
+            if getClientIp()==ip then
+                return true
+            end
+        end
+    end
+    if wtiprules ~= nil then
+        if ngxmatch(wtiprules,getClientIp(),"m") then
+            return true
+        end
+    end
+        return false
+end
+```
+
+# cfips 自动上报 ip脚本，变成两个版本。 
+A版本： 在 cfAttack==1时，被cc时， ip加入waf黑名单，同时上报 到 cf黑名单，然后解除 waf黑名单。
+B版本： 在 cfAttack==1时，被cc时， ip加入waf黑名单。 在 cfAttack==0时，上报 到 cf黑名单， 解除 waf黑名单。
+更换版本的原因是： 如果是大量的供给来源ip，可能会导致 上报cf ip频繁。 可能服务器瘫痪等原因。 
