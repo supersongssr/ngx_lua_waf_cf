@@ -61,8 +61,8 @@ urlrules=read_rule('url')
 argsrules=read_rule('args')
 uarules=read_rule('user-agent')
 wturlrules=read_rule('whiteurl')
-wtiprules=read_rule('whiteip')
-blockiprules=read_rule('blockip')
+-- wtiprules=read_rule('whiteip')
+-- blockiprules=read_rule('blockip')
 postrules=read_rule('post')
 ckrules=read_rule('cookie')
 html=read_rule('returnhtml')
@@ -268,12 +268,12 @@ function whiteip()
             end
         end
     end
-    if wtiprules ~= nil then
-        if ngxmatch(wtiprules,getClientIp(),"m") then
-            return true
-        end
-    end
-        return false
+    -- if wtiprules ~= nil then
+    --     if ngxmatch(wtiprules,getClientIp(),"m") then
+    --         return true
+    --     end
+    -- end
+    return false
 end
 
 function blockip()
@@ -285,11 +285,11 @@ function blockip()
             end
         end
     end
-    if blockiprules ~= nil then
-        if ngxmatch(blockiprules,getClientIp(),"m") then
-            ngx.exit(444)
-            return true
-        end
-    end
-        return false
+    -- if blockiprules ~= nil then
+    --     if ngxmatch(blockiprules,getClientIp(),"m") then
+    --         ngx.exit(444)
+    --         return true
+    --     end
+    -- end
+    return false
 end
