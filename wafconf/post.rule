@@ -1,11 +1,12 @@
+\.\./
 select.+(from|limit)
 (?:(union(.*?)select))
-\b(or|xor|and)\b.*(=|<|>|'|")
-having|load_file
 sleep\((\s*)(\d*)(\s*)\)
 benchmark\((.*)\,(.*)\)
 base64_decode\(
 (?:from\W+information_schema\W)
+(?:(?:current_)user|database|schema|connection_id)\s*\(
+(?:etc\/\W*passwd)
 into(\s+)+(?:dump|out)file\s*
 group\s+by.+\(
 xwork.MethodAccessor
