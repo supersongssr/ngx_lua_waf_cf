@@ -1,0 +1,8 @@
+{
+    "Lua.diagnostics.disable": [
+        "param-type-mismatch"
+    ],
+    "Lua.diagnostics.globals": [
+        "waf_status_disable"
+    ]
+}

@@ -57,8 +57,8 @@ end
 --[[
 --根据规则路径获得规则
  ]]
-function get_rule(rulefilename)
-    local RULE_PATH = config_rule_dir
+function waf_get_rule(rulefilename)
+    local RULE_PATH = waf_config_rule_dir
     local RULE_FILE = io.open(RULE_PATH..'/'..rulefilename,"r")
     if RULE_FILE == nil then
         return
@@ -75,8 +75,8 @@ end
 --[[
 --记录日志到文件
  ]]
-function log_record(method,url,data,ruletag)
-    local LOG_PATH = config_log_dir
+function waf_log_record(method,url,data,ruletag)
+    local LOG_PATH = waf_config_log_dir
     local realIp = get_client_ip()
     local ua = get_user_agent()
     local servername = ngx.var.server_name;
@@ -101,8 +101,8 @@ end
 --拦截后返回
  ]]
 function waf_output()
-    if config_waf_output == "redirect" then
-        ngx.redirect(config_waf_redirect_url, 301)
+    if waf_config_waf_output == "redirect" then
+        ngx.redirect(waf_config_waf_redirect_url, 301)
     else
         ngx.header.content_type = "text/html"
         ngx.status = ngx.HTTP_FORBIDDEN

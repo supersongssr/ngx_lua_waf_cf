@@ -2,24 +2,23 @@
 -- 2023-11-28
 -- enable = "on",disable = "off"
 
-config_waf_enable = "on" --防火墙状态
-config_white_host_check = "on" --是否开启域名白名单 静态网站放行
-config_white_host_list = {'myhost.bitch'} --域名白名单  ==匹配
-config_white_ip_check = "on" --是否开启白名单IP检查 ==匹配
-config_black_ip_check = "on" --是否开启黑名单IP检查 $$正则匹配
-config_white_url_check = "on" --是否开启白名单url ==匹配 uri不带searchQuery
-config_black_url_check = "on" --是否开启黑名单url ==匹配 uri不带searchQuery
-config_user_agent_check = "on" --是否开启头信息检查 $$正则匹配
-config_url_check = "on" --是否开启url路径检查 $$正则匹配 url带searchQuery
-config_url_args_check = "on" --是否开启url参数过滤检查 $$正则匹配
-config_cookie_check = "on" --是否开启cookie检查 $$正则匹配
-config_post_check = "off" --是否开启post检查 $$正则匹配
-config_attack_log = "on" --是否记录日志
-config_log_dir = "/www/wwwlogs/waf/" --日志目录 宝塔
-config_rule_dir = "/www/server/panel/vhost/wafconf/" --规则目录 宝塔
-config_waf_output = "html" --设置拦截后重定向类型有 redirect/html
-config_waf_redirect_url = "" --config_waf_output 设置为redirect使用的重定向地址
-config_output_html=[[
+waf_config_waf_enable = "on" --防火墙状态
+waf_config_white_host_check = "on" --是否开启域名白名单 静态网站放行
+waf_config_white_ip_check = "on" --是否开启白名单IP检查 ==匹配
+waf_config_black_ip_check = "on" --是否开启黑名单IP检查 $$正则匹配
+waf_config_white_url_check = "on" --是否开启白名单url ==匹配 uri不带searchQuery
+waf_config_black_url_check = "on" --是否开启黑名单url ==匹配 uri不带searchQuery
+waf_config_user_agent_check = "on" --是否开启头信息检查 $$正则匹配
+waf_config_url_check = "on" --是否开启url路径检查 $$正则匹配 url带searchQuery
+waf_config_url_args_check = "on" --是否开启url参数过滤检查 $$正则匹配
+waf_config_cookie_check = "on" --是否开启cookie检查 $$正则匹配
+waf_config_post_check = "off" --是否开启post检查 $$正则匹配
+waf_config_attack_log = "on" --是否记录日志
+waf_config_log_dir = "/www/wwwlogs/waf/" --日志目录 宝塔
+waf_config_rule_dir = "/www/server/panel/vhost/wafconf/" --规则目录 宝塔
+waf_config_waf_output = "html" --设置拦截后重定向类型有 redirect/html
+waf_config_waf_redirect_url = "" --config_waf_output 设置为redirect使用的重定向地址
+waf_config_output_html=[[
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
